@@ -73,14 +73,11 @@ class VendingMachine
       nil #何もしない
       end
     end
-    # p "コーラ、水、redbull それぞれの在庫"
-    # p @juice[0][:stock]
-    # p @juice[1][:stock]
-    # p @juice[2][:stock]
-    # p "売り上げ"
-    # p @sales
-    # p "お釣り"
-    # p @slot_money
+    
+    def total_sales
+      @sales
+    end
+
   end
 
 end
