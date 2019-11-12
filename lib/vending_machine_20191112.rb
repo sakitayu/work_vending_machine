@@ -1,46 +1,50 @@
 class Drink
-  attr_reader :name,:price,:item,:stock,:info
-  def initialize(vm,name,price)
-    @name = name
-    @price = price
+  attr_reader :name,:price,:item,:stock,:drink_info,:vm
+  def initialize(args)
+    @name = args[:name]
+    @price = args[:price]
     @stock = 0
-    @id = 0
-    @info = {name: @name,price: @price,stock: @stock}
-    vm.item_lists << @info
+    @vm = args[:vm]
+    @drink_info = {name: @name,price: @price,stock: @stock}
+    @vm.item_lists << @drink_info
   end
   
-  def drink_stock(vm,number)
+  def drink_stock(number)
     @stock += number
-    item_listing(vm)
+    item_listing()
   end
   
-  def item_listing(vm)
-    vm.item_lists.map { |key,value| key[:stock] = self.stock  if key[:name] == self.name}
+  def item_listing()
+    @vm.item_lists.map { |key,value| key[:stock] = self.stock  if key[:name] == self.name}
   end
 end
 
 class Guest
-  def buy(vm,drink)
-    if drink.stock > 0
-      if vm.slot_money >= drink.price
-      drink.drink_stock(vm,-1)
-      vm.reduce_money(drink)
-      vm.record_money(drink)
-      end  
-    else
-      nil
-    end
+  def select(drink)
+    drink.vm.buy_drink(drink)
   end
 end
 
 class VendingMachine
-  attr_reader :slot_money,:sales,:item_lists,:id
+  attr_reader :slot_money,:sales,:item_lists,:id,:vm
   MONEY = [10, 50, 100, 500, 1000].freeze
-  def initialize(id)
-    @id = id
+  def initialize(args)
+    @id = args[:id] || 0
     @slot_money = 0
     @sales = 0
     @item_lists = []
+  end
+
+  def buy_drink(drink)
+    if drink.stock > 0
+      if drink.vm.slot_money >= drink.price
+      drink.drink_stock(-1)
+      reduce_money(drink)
+      record_money(drink)
+      end  
+    else
+      nil
+    end
   end
   # 売り上げ計上
   def record_money(drink)
@@ -80,36 +84,26 @@ class VendingMachine
     vm_id.push(lists)
   end
 end
-# # 客をインスタンス化
-# guest = Guest.new
-# # 引数は自販機のIDとなる
-# vm1 = VendingMachine.new(1)
-# # その自販機が扱う商品を定義
-# vm1_cola = Drink.new(vm1,"cola",120)
-# vm1_water = Drink.new(vm1,"water",100)
-# vm1_redbull = Drink.new(vm1,"redbull",200)
-# # その自販機が扱う商品を数量分ストック
-# vm1_cola.drink_stock(vm1,5)
-# vm1_water.drink_stock(vm1,5)
-# vm1_redbull.drink_stock(vm1,5)
-# # その自販機にお金を入れる
-# vm1.slot(1000)
-# # その客がその自販機の商品の購入ボタンを押す
-# guest.buy(vm1,vm1_cola)
-# vm1.slot(1000)
-# guest.buy(vm1,vm1_cola)
-# vm1.slot(1000)
-# guest.buy(vm1,vm1_cola)
-# vm1.slot(1000)
-# guest.buy(vm1,vm1_cola)
-# vm1.slot(1000)
-# guest.buy(vm1,vm1_cola)
-# vm1.slot(1000)
-# guest.buy(vm1,vm1_cola)
-# vm1.slot(1000)
-# guest.buy(vm1,vm1_cola)
-# vm1.slot(1000)
-# guest.buy(vm1,vm1_water)
-# vm1.slot(1000)
-# # 購入できる商品リストを返す
-# p vm1.possible_to_buy_lists
+# 客をインスタンス化
+guest = Guest.new
+# 自販機にIDをつける
+vm1 = VendingMachine.new(id: 1)
+# その自販機が扱う商品を定義
+cola = Drink.new(vm:vm1,name:"cola",price:120)
+water = Drink.new(vm:vm1,name:"water",price:100)
+redbull = Drink.new(vm:vm1,name:"redbull",price:200)
+# その自販機が扱う商品を数量分ストック
+cola.drink_stock(5)
+water.drink_stock(5)
+redbull.drink_stock(5)
+# その自販機にお金を入れる
+vm1.slot(100)
+# その客がその自販機の商品の購入ボタンを押す
+guest.select(water)
+vm1.slot(100)
+guest.select(water)
+vm1.slot(100)
+# 購入できる商品リストを返す
+p vm1.possible_to_buy_lists
+vm1.slot(1000)
+p vm1.possible_to_buy_lists
