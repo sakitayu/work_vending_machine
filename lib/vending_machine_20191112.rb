@@ -21,7 +21,7 @@ end
 
 class Guest
   def select(drink)
-    drink.vm.buy_drink(drink)
+    drink.vm.sell_drink(drink)
   end
 end
 
@@ -35,11 +35,11 @@ class VendingMachine
     @item_lists = []
   end
 
-  def buy_drink(drink)
+  def sell_drink(drink)
     if drink.stock > 0 && drink.vm.slot_money >= drink.price
       drink.drink_stock(-1)
-      reduce_money(drink)
       record_money(drink)
+      reduce_money(drink)
     else
       nil
     end

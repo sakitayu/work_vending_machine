@@ -12,7 +12,7 @@
 - お金を入れる
     - vm1.slot(1000)
 - ゲストが商品を選ぶ
-    - guest.select(water)
+    - guest.select(cola)
 - その自販機の売り上げをだす
     - vm1.total_sales
 - その自販機の投入金額をだす
