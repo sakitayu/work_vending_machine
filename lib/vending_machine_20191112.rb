@@ -29,7 +29,7 @@ class VendingMachine
   attr_reader :slot_money,:sales,:item_lists,:id
   MONEY = [10, 50, 100, 500, 1000].freeze
   def initialize(args)
-    @id = args[:id] || 0
+    @id = args[:id]
     @slot_money = 0
     @sales = 0
     @item_lists = []
