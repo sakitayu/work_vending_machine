@@ -1,0 +1,21 @@
+- require './vending_machine_20191112.rb'
+- インスタンス化
+    - guest = Guest.new
+    - vm1 = VendingMachine.new(id:1)
+    - cola = Drink.new(vm:vm1,name:"cola",price:120)
+    - water = Drink.new(vm:vm1,name:"water",price:100)
+    - redbull = Drink.new(vm:vm1,name:"redbull",price:200)
+- 商品をストック
+    - cola.drink_stock(5)
+    - water.drink_stock(5)
+    - redbull.drink_stock(5)
+- お金を入れる
+    - vm1.slot(1000)
+- ゲストが商品を選ぶ
+    - guest.select(water)
+- その自販機の売り上げをだす
+    - vm1.total_sales
+- その自販機の投入金額をだす
+    - vm1.current_slot_money
+- 投入金額に対する購入可能リストをかえす
+    - vm1.possible_to_buy_lists
